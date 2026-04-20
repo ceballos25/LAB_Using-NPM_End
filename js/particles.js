@@ -1,56 +1,73 @@
 tsParticles.load("tsparticles", {
-    background: {
-        color: "#000000"
-    },
     fullScreen: {
         enable: true,
         zIndex: -1
     },
+    background: {
+        color: "#000000"
+    },
     particles: {
         number: {
-            value: 150
+            value: 100,
+            density: {
+                enable: true,
+                area: 800
+            }
         },
         color: {
-            value: ["#00bfff", "#00ff7f", "#ffffff"]
+            value: "#ffffff"
         },
         shape: {
             type: "circle"
         },
         opacity: {
-            value: 0.3
+            value: { min: 0.1, max: 0.8 },
+            animation: {
+                enable: true,
+                speed: 0.5,
+                sync: false
+            }
         },
         size: {
-            value: { min: 1, max: 3 }
+            value: { min: 0.5, max: 2 },
+            animation: {
+                enable: false
+            }
         },
         move: {
             enable: true,
-            speed: 0.3,
+            speed: 0.2,
+            direction: "none",
+            random: true,
+            straight: false,
             outModes: {
-                default: "bounce"
+                default: "out"
+            }
+        },
+        twinkle: {
+            particles: {
+                enable: true,
+                frequency: 0.05,
+                opacity: 1
             }
         },
         links: {
-            enable: true,
-            distance: 150,
-            color: "#ffffff",
-            opacity: 0.2,
-            width: 1
+            enable: false
         }
     },
     interactivity: {
         events: {
             onHover: {
                 enable: true,
-                mode: "grab"
+                mode: "repulse"
             }
         },
         modes: {
-            grab: {
-                distance: 150,
-                links: {
-                    opacity: 0.5
-                }
+            repulse: {
+                distance: 100,
+                duration: 0.4
             }
         }
-    }
+    },
+    detectRetina: true
 });

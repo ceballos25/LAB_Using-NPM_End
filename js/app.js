@@ -97,10 +97,10 @@ function mostrarApod(apod) {
         : `<img src="${apod.media}" alt="${apod.titulo}" style="max-width:100%; border-radius:8px;">`;
 
     divResultado.innerHTML = `
-        <h2 style="color:#fff; margin-bottom:8px;">${apod.titulo}</h2>
+        <h2 style="color:#000; margin-bottom:8px;">${apod.titulo}</h2>
         <p style="color:#aaa; margin-bottom:12px;"><strong>Fecha:</strong> ${apod.fecha}</p>
         ${mediaHTML}
-        <p style="margin-top:12px; color:#ddd; line-height:1.6;">${apod.descripcion}</p>
+        <p style="margin-top:12px; color:#000; line-height:1.6;">${apod.descripcion}</p>
     `;
 }
 
@@ -149,8 +149,8 @@ function renderizarFavoritos() {
             <p style="font-weight:bold; margin:8px 8px 4px; color:#fff; font-size:0.85rem;">${apod.titulo}</p>
             <p style="font-size:0.75em; color:#aaa; margin:0 8px 8px;">${apod.fecha}</p>
             <div style="display:flex; gap:6px; justify-content:center; padding-bottom:10px;">
-                <button class="btn-fav btn-cargar">Cargar</button>
-                <button class="btn-fav btn-eliminar">Eliminar</button>
+                <button class="btn-fav btn-cargar favorites__button-cargar style="color:#fff">Cargar</button>
+                <button class="btn-fav btn-eliminar favorites__button-delete" style="color:#fff">Eliminar</button>
             </div>
         `;
 
