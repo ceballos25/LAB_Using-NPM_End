@@ -5,97 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- suitAlert2 -->
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>Imagenes de la Nasa</title>
+    <title>Imágenes de la NASA</title>
 </head>
 <body>
     <div id="tsparticles"></div>
 
     <header class="header">
-        <h1 class="header__title">Obten imágenes de la NASA</h1>
-        <p class="header__description">Buscar y obtener imágenes de la NASA</p>
+        <h1 class="header__title">Imágenes de la NASA</h1>
+        <p class="header__description">Busca y guarda imágenes astronómicas del día</p>
     </header>
 
     <main class="poke-app">
-        
+
         <div class="search-box">
 
-            <!-- Boton guardar a favoritos -->
-            <button id="btnAgregarApodFavorito" class="search-box__button-search search-box__button-keep">♥️</button>
+            <!-- Botón guardar a favoritos (oculto hasta que se cargue un APOD) -->
+            <button id="btnAgregarApodFavorito" class="search-box__button-search search-box__button-keep" style="display:none;">♥ Guardar favorito</button>
 
-            <!-- Contenedor de fondo donde se va a ir el pokemon -->
-            <div id="containerImgDay" style="display: none;" class="show-box__box-bg">
-
-                <!-- Contenedor donde se va a mostrar el pokemon -->
-                <div id="resultadoImgDia" class="show-pokemon">
-
+            <!-- Contenedor donde se muestra el resultado -->
+            <div class="show-box__box-bg" style="margin-top: 20px;">
+                <div class="show-pokemon">
                     <h3 class="search-box__title show-box__title">Imagen del día</h3>
-
-                    <div class="show-box__card">
-                        <div id="imagen" class="show-box__pokemon-img"></div>                        
-                        
-                        <div id="nombre" class="show-box__pokemon-name" ></div>
-
+                    <div id="resultadoApod" class="show-box__card">
+                        <!-- Aquí se inyecta el APOD -->
                     </div>
-
-                    
-                </div>
-            </div>
-
-            <!-- Contenedor de fondo donde se va a ir el pokemon -->
-            <div id="contenedorPokemon" style="display: none;" class="show-box__box-bg">
-
-                <!-- Contenedor donde se va a mostrar el pokemon -->
-                <div id="resultadoApod" class="show-pokemon">
-
-                    <h3 class="search-box__title show-box__title">RESULTADO DE BUSQUEDA</h3>
-
-                    <div class="show-box__card">
-                        <div id="imagen" class="show-box__pokemon-img"></div>                        
-                        
-                        <div id="nombre" class="show-box__pokemon-name" ></div>
-
-                    </div>
-
-                    
                 </div>
             </div>
 
         </div>
 
         <section class="favorites-box">
-            
-            <!-- Titulo -->
+
             <h2 class="search-box__title">BÚSQUEDA DE IMAGEN POR FECHA</h2>
-            <!-- Input -->
-            <input class="search-box__input" type="date" max="2026-04-20" id="customDate" placeholder="Selecciona una fecha">
 
-            <!-- Boton Buscar -->
-            <button id="btnBuscarApod" class="search-box__button-search">🔎</button>       
-            <h4 class="search-box__title" style="margin-top: 5%;">Mis favoritos ⭐</h4>
+            <input class="search-box__input" type="date" id="customDate" placeholder="Selecciona una fecha">
+            <button id="btnBuscarApod" class="search-box__button-search">🔎</button>
 
+            <h4 class="search-box__title" style="margin-top: 24px;">Mis favoritos ⭐</h4>
 
             <div id="listaApodFavoritos" class="favorites-cards">
-
-                <!-- Tarjeta pokemon favorito -->
-                <div class="favorites-card-box">
-                    <p class="favorites__title">Buscar</p>
-
-                    <div class="favorites__img">🃏</div>
-
-                    <button class="search-box__button-search favorites__button-delete">Eliminar</button>
-                </div>
-
-
+                <!-- Las tarjetas de favoritos se generan aquí -->
             </div>
 
         </section>
 
     </main>
 
+    <!-- tsParticles desde CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <!-- Inicialización de partículas -->
+    <script src="js/particles.js"></script>
+    <!-- Lógica principal -->
     <script src="js/app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script> 
-    <!-- <script src="js/particles.js"></script> -->
 </body>
 </html>

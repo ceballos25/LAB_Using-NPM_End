@@ -1,5 +1,4 @@
-// ─── Constantes ───────────────────────────────────────────────────────────────
-const API_KEY = 'KEY';
+const API_KEY = 'P0QBoqf2HFKwDJ8HkPv3SNeSNdcHED6fkKizizCc';
 const API_URL = 'https://api.nasa.gov/planetary/apod';
 const CLAVE_FAVORITOS_STORAGE = 'apod_favoritos';
 
@@ -7,11 +6,14 @@ const CLAVE_FAVORITOS_STORAGE = 'apod_favoritos';
 let apodActual = null;
 
 // ─── Referencias DOM ──────────────────────────────────────────────────────────
-const btnBuscar        = document.getElementById('btnBuscarApod');
-const btnFavorito      = document.getElementById('btnAgregarApodFavorito');
-const divResultado     = document.getElementById('resultadoApod');
+const btnBuscar         = document.getElementById('btnBuscarApod');
+const btnFavorito       = document.getElementById('btnAgregarApodFavorito');
+const divResultado      = document.getElementById('resultadoApod');
 const divListaFavoritos = document.getElementById('listaApodFavoritos');
-const inputFecha       = document.getElementById('customDate');
+const inputFecha        = document.getElementById('customDate');
+
+// ─── Limitar el input de fecha al día de hoy ──────────────────────────────────
+inputFecha.max = new Date().toISOString().split('T')[0];
 
 // ─── Eventos ──────────────────────────────────────────────────────────────────
 btnBuscar.addEventListener('click', buscarImagenDelDia);
@@ -57,6 +59,7 @@ function buscarImagenDelDia() {
         : `${API_URL}?api_key=${API_KEY}`;
 
     divResultado.innerHTML = '<p>Cargando...</p>';
+    // CORRECCIÓN: Ocultar el botón mientras carga
     btnFavorito.style.display = 'none';
 
     fetch(url)
@@ -74,6 +77,7 @@ function buscarImagenDelDia() {
             };
 
             mostrarApod(apodActual);
+            // CORRECCIÓN: Mostrar el botón solo cuando hay un APOD cargado
             btnFavorito.style.display = 'inline-block';
             showAlert({ type: 'success', message: '¡APOD cargado!' });
         })
@@ -93,10 +97,10 @@ function mostrarApod(apod) {
         : `<img src="${apod.media}" alt="${apod.titulo}" style="max-width:100%; border-radius:8px;">`;
 
     divResultado.innerHTML = `
-        <h2>${apod.titulo}</h2>
-        <p><strong>Fecha:</strong> ${apod.fecha}</p>
+        <h2 style="color:#fff; margin-bottom:8px;">${apod.titulo}</h2>
+        <p style="color:#aaa; margin-bottom:12px;"><strong>Fecha:</strong> ${apod.fecha}</p>
         ${mediaHTML}
-        <p style="margin-top:12px;">${apod.descripcion}</p>
+        <p style="margin-top:12px; color:#ddd; line-height:1.6;">${apod.descripcion}</p>
     `;
 }
 
@@ -129,24 +133,24 @@ function renderizarFavoritos() {
     divListaFavoritos.innerHTML = '';
 
     if (favoritos.length === 0) {
-        divListaFavoritos.innerHTML = '<p>No tienes favoritos guardados.</p>';
+        divListaFavoritos.innerHTML = '<p style="color:#aaa;">No tienes favoritos guardados.</p>';
         return;
     }
 
     favoritos.forEach(function (apod) {
         const miniMedia = apod.tipo === 'video'
             ? `<div style="background:#000;color:#fff;padding:20px;text-align:center;border-radius:6px;">▶ Video</div>`
-            : `<img src="${apod.media}" alt="${apod.titulo}" style="width:100%;height:120px;object-fit:cover;border-radius:6px;">`;
+            : `<img src="${apod.media}" alt="${apod.titulo}" style="width:100%;height:120px;object-fit:cover;">`;
 
         const div = document.createElement('div');
-        div.style.cssText = 'border:1px solid #ddd; border-radius:8px; padding:12px; margin-bottom:12px; cursor:pointer;';
+        div.className = 'favorites-card-box';
         div.innerHTML = `
             ${miniMedia}
-            <p style="font-weight:bold; margin:8px 0 4px;">${apod.titulo}</p>
-            <p style="font-size:0.85em; color:#666; margin:0 0 8px;">${apod.fecha}</p>
-            <div style="display:flex; gap:8px;">
-                <button class="btn-cargar">Cargar</button>
-                <button class="btn-eliminar">Eliminar</button>
+            <p style="font-weight:bold; margin:8px 8px 4px; color:#fff; font-size:0.85rem;">${apod.titulo}</p>
+            <p style="font-size:0.75em; color:#aaa; margin:0 8px 8px;">${apod.fecha}</p>
+            <div style="display:flex; gap:6px; justify-content:center; padding-bottom:10px;">
+                <button class="btn-fav btn-cargar">Cargar</button>
+                <button class="btn-fav btn-eliminar">Eliminar</button>
             </div>
         `;
 
@@ -177,9 +181,9 @@ function eliminarFavorito(fecha) {
     showAlert({ type: 'success', message: 'Favorito eliminado' });
 }
 
-// ─── Inicialización ─────────────────────────────────────────────────────────────────────
+// ─── Inicialización ────────────────────────────────────────────────────────────
 // Cargar APOD del día al iniciar la página
 buscarImagenDelDia();
 
-// Renderizar favoritos guardados
+// Renderizar favoritos guardados en localStorage
 renderizarFavoritos();
