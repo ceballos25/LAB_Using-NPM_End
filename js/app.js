@@ -1,14 +1,23 @@
-let pokemonActual = null;
-let = CLAVE_FAVORITOS_STORAGE = 'favoritos'
+// ─── Constantes ───────────────────────────────────────────────────────────────
+const API_KEY = 'KEY';
+const API_URL = 'https://api.nasa.gov/planetary/apod';
+const CLAVE_FAVORITOS_STORAGE = 'apod_favoritos';
 
-const btnFavorito = document.getElementById('btnFavorito')
-const divResultado = document.getElementById('resultado');
-const divListaFavoritos = document.getElementById('listaFavoritos');
-const btnBuscar = document.getElementById('btnBuscar');
-btnBuscar.addEventListener('click', searchPokemon);
+// ─── Estado ───────────────────────────────────────────────────────────────────
+let apodActual = null;
+
+// ─── Referencias DOM ──────────────────────────────────────────────────────────
+const btnBuscar        = document.getElementById('btnBuscarApod');
+const btnFavorito      = document.getElementById('btnAgregarApodFavorito');
+const divResultado     = document.getElementById('resultadoApod');
+const divListaFavoritos = document.getElementById('listaApodFavoritos');
+const inputFecha       = document.getElementById('customDate');
+
+// ─── Eventos ──────────────────────────────────────────────────────────────────
+btnBuscar.addEventListener('click', buscarImagenDelDia);
 btnFavorito.addEventListener('click', guardarFavorito);
 
-
+// ─── Utilidades ───────────────────────────────────────────────────────────────
 function showAlert({ type, message }) {
     Swal.fire({
         toast: true,
@@ -16,161 +25,161 @@ function showAlert({ type, message }) {
         icon: type,
         title: message,
         showConfirmButton: false,
-        timer: 2000,
+        timer: 2500,
         timerProgressBar: true
     });
 }
 
+function obtenerFavoritosGuardados() {
+    const datos = localStorage.getItem(CLAVE_FAVORITOS_STORAGE);
+    return datos ? JSON.parse(datos) : [];
+}
 
-function searchPokemon() {
-    const nombre = document.getElementById('pokemonInput').value.toLowerCase().trim();
+function guardarEnStorage(favoritos) {
+    localStorage.setItem(CLAVE_FAVORITOS_STORAGE, JSON.stringify(favoritos));
+}
 
-    // console.log("Buscando pokemon:", nombre);
+// ─── Buscar APOD ──────────────────────────────────────────────────────────────
+function buscarImagenDelDia() {
+    const fecha = inputFecha ? inputFecha.value : '';
 
-    if (!nombre) {
-        showAlert({
-            type: 'error',
-            message: 'Por favor escribe un nombre de pokemon'
-        });
-        return;
+    // Validar que no sea fecha futura
+    if (fecha) {
+        const hoy = new Date().toISOString().split('T')[0];
+        if (fecha > hoy) {
+            showAlert({ type: 'error', message: 'No puedes buscar fechas futuras' });
+            return;
+        }
     }
 
-    const url = `https://pokeapi.co/api/v2/pokemon/${nombre}`;
+    const url = fecha
+        ? `${API_URL}?api_key=${API_KEY}&date=${fecha}`
+        : `${API_URL}?api_key=${API_KEY}`;
 
-    // console.log(" URL:", url);
+    divResultado.innerHTML = '<p>Cargando...</p>';
+    btnFavorito.style.display = 'none';
 
     fetch(url)
         .then(function (response) {
-            // console.log("respuesta:", response.status, response.ok);
-
-            if (!response.ok) {
-                throw new Error("pokemon no encontrado");
-            }
+            if (!response.ok) throw new Error('Error al conectar con la API de NASA');
             return response.json();
         })
         .then(function (data) {
-            // console.log("datos de  la API:", data);
-
-            pokemonActual = {
-                nombre: data.name,
-                imagen: data.sprites.front_default
+            apodActual = {
+                titulo:      data.title,
+                fecha:       data.date,
+                media:       data.media_type === 'video' ? data.url : data.hdurl || data.url,
+                tipo:        data.media_type,
+                descripcion: data.explanation
             };
 
-            // console.log("pokemonActual:", pokemonActual);
-
-            // console.log("url imagen:", pokemonActual.imagen);
-            showAlert({
-                type: 'success',
-                message: '¡pokemon Encontrado!'
-            });
-
-            mostrarPokemon(pokemonActual);
-
+            mostrarApod(apodActual);
+            btnFavorito.style.display = 'inline-block';
+            showAlert({ type: 'success', message: '¡APOD cargado!' });
         })
         .catch(function (error) {
-            // console.error("error en la petición:", error);
-
-            showAlert({
-                type: 'error',
-                message: '¡pokemon no encontrado!'
-            });
-
-            if (divResultado) {
-                divResultado.innerHTML =
-                    '<p style="color:red;">Pokémon no encontrado. Intenta con otro nombre.</p>';
-            }
-
-            // btnFavorito.style.display = 'none';
-            pokemonActual = null;
+            console.error(error);
+            divResultado.innerHTML = '<p style="color:red;">No se pudo obtener la imagen. Intenta con otra fecha.</p>';
+            apodActual = null;
+            btnFavorito.style.display = 'none';
+            showAlert({ type: 'error', message: 'Error al obtener la APOD' });
         });
 }
 
-// Luis ok
-function mostrarPokemon(pokemon) {
-    document.getElementById("contenedorPokemon").style.display = "block";
+// ─── Mostrar APOD ─────────────────────────────────────────────────────────────
+function mostrarApod(apod) {
+    const mediaHTML = apod.tipo === 'video'
+        ? `<iframe src="${apod.media}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>`
+        : `<img src="${apod.media}" alt="${apod.titulo}" style="max-width:100%; border-radius:8px;">`;
 
-    document.getElementById("imagen").innerHTML = `<img src="${pokemon.imagen}" width="180" alt="${pokemon.nombre}">`;
-    document.getElementById("nombre").innerHTML = pokemon.nombre.toUpperCase();
+    divResultado.innerHTML = `
+        <h2>${apod.titulo}</h2>
+        <p><strong>Fecha:</strong> ${apod.fecha}</p>
+        ${mediaHTML}
+        <p style="margin-top:12px;">${apod.descripcion}</p>
+    `;
 }
 
-// Lucelly
-function pokemonFavoritos() {
-    const favoritesCards = document.querySelector(".favorites-cards");
-    favoritesCards.innerHTML = "";
+// ─── Guardar favorito ─────────────────────────────────────────────────────────
+function guardarFavorito() {
+    if (!apodActual) {
+        showAlert({ type: 'error', message: 'Primero busca una imagen' });
+        return;
+    }
 
     const favoritos = obtenerFavoritosGuardados();
+    const yaExiste = favoritos.some(function (fav) {
+        return fav.fecha === apodActual.fecha;
+    });
 
-    favoritos.forEach(function (pokemon) {
-        const div = document.createElement("div");
-        div.classList.add("favorites-card-box");
+    if (yaExiste) {
+        showAlert({ type: 'error', message: 'Esta APOD ya está en favoritos' });
+        return;
+    }
+
+    favoritos.push(apodActual);
+    guardarEnStorage(favoritos);
+    renderizarFavoritos();
+    showAlert({ type: 'success', message: '¡Guardado en favoritos!' });
+}
+
+// ─── Renderizar lista de favoritos ────────────────────────────────────────────
+function renderizarFavoritos() {
+    const favoritos = obtenerFavoritosGuardados();
+    divListaFavoritos.innerHTML = '';
+
+    if (favoritos.length === 0) {
+        divListaFavoritos.innerHTML = '<p>No tienes favoritos guardados.</p>';
+        return;
+    }
+
+    favoritos.forEach(function (apod) {
+        const miniMedia = apod.tipo === 'video'
+            ? `<div style="background:#000;color:#fff;padding:20px;text-align:center;border-radius:6px;">▶ Video</div>`
+            : `<img src="${apod.media}" alt="${apod.titulo}" style="width:100%;height:120px;object-fit:cover;border-radius:6px;">`;
+
+        const div = document.createElement('div');
+        div.style.cssText = 'border:1px solid #ddd; border-radius:8px; padding:12px; margin-bottom:12px; cursor:pointer;';
         div.innerHTML = `
-            <p class="favorites__title">${pokemon.nombre.toUpperCase()}</p>
-            <div class="favorites__img">
-                <img src="${pokemon.imagen}" alt="${pokemon.nombre}">
+            ${miniMedia}
+            <p style="font-weight:bold; margin:8px 0 4px;">${apod.titulo}</p>
+            <p style="font-size:0.85em; color:#666; margin:0 0 8px;">${apod.fecha}</p>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-cargar">Cargar</button>
+                <button class="btn-eliminar">Eliminar</button>
             </div>
-            <button class="search-box__button-search favorites__button-delete">Eliminar</button>
         `;
 
-        const btnEliminar = div.querySelector(".favorites__button-delete");
-        btnEliminar.addEventListener("click", function () {
-            eliminarFavorito(pokemon.nombre);
+        div.querySelector('.btn-cargar').addEventListener('click', function () {
+            apodActual = apod;
+            mostrarApod(apod);
+            btnFavorito.style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        favoritesCards.appendChild(div);
+        div.querySelector('.btn-eliminar').addEventListener('click', function (e) {
+            e.stopPropagation();
+            eliminarFavorito(apod.fecha);
+        });
+
+        divListaFavoritos.appendChild(div);
     });
 }
 
-function eliminarFavorito(nombre) {
+// ─── Eliminar favorito ────────────────────────────────────────────────────────
+function eliminarFavorito(fecha) {
     const favoritos = obtenerFavoritosGuardados();
-    const nuevosFavoritos = favoritos.filter(function (pokemon) {
-        return pokemon.nombre !== nombre;
+    const nuevos = favoritos.filter(function (fav) {
+        return fav.fecha !== fecha;
     });
-    localStorage.setItem(CLAVE_FAVORITOS_STORAGE, JSON.stringify(nuevosFavoritos));
-    pokemonFavoritos();
+    guardarEnStorage(nuevos);
+    renderizarFavoritos();
+    showAlert({ type: 'success', message: 'Favorito eliminado' });
 }
 
-// funcion auxiliar para guardar favorito
-function obtenerFavoritosGuardados() {
-    const favoritosGuardados = localStorage.getItem(CLAVE_FAVORITOS_STORAGE);
-    if (favoritosGuardados === null) {
-        return [];
-    }
-    return JSON.parse(favoritosGuardados);
-}
+// ─── Inicialización ─────────────────────────────────────────────────────────────────────
+// Cargar APOD del día al iniciar la página
+buscarImagenDelDia();
 
-// Fernando
-function guardarFavorito() {
-    if (pokemonActual === null) {
-        showAlert({
-            type: 'error',
-            message: 'Por favor escribe un nombre de pokemon'
-        });
-        return;
-    }
-    const listaFavoritosActual = obtenerFavoritosGuardados();
-    const pokemonYaExisteEnFavoritos = listaFavoritosActual.some(function (pokemonFavorito) {
-        return pokemonFavorito.nombre === pokemonActual.nombre;
-    });
-
-    if (pokemonYaExisteEnFavoritos) {
-        showAlert({
-            type: 'error',
-            message: 'éste pokemos ya existe'
-        });
-        return;
-    }
-    listaFavoritosActual.push(pokemonActual);
-    localStorage.setItem(
-        CLAVE_FAVORITOS_STORAGE,
-        JSON.stringify(listaFavoritosActual)
-    );
-    showAlert({
-        type: 'success',
-        message: '¡Guardado en la lista de favoritos!'
-    });
-    pokemonFavoritos();
-
-}
-
-// Debe llamarse al cargar siempre la pàgina
-pokemonFavoritos()
+// Renderizar favoritos guardados
+renderizarFavoritos();
