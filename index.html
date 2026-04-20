@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- suitAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>TALLER WEB STORAGE APIS</title>
+</head>
+<body>
+
+    <header class="header">
+        <h1 class="header__title">Mi PokéApp Favoritos</h1>
+        <p class="header__description">Buscar colección con localStorage</p>
+    </header>
+
+    <main class="poke-app">
+        
+        <div class="search-box">
+
+            <!-- Titulo -->
+            <h2 class="search-box__title">BÚSQUEDA DE POKÉMON</h2>
+
+            <!-- Input -->
+            <input class="search-box__input" type="text" id="pokemonInput" placeholder="Ingresa el nombre del pokemon">
+
+            <!-- Boton Buscar -->
+            <button id="btnBuscar" class="search-box__button-search">🔎</button>
+
+            <!-- Boton guardar a favoritos -->
+            <button id="btnFavorito" class="search-box__button-search search-box__button-keep">♥️</button>
+
+
+            <!-- Contenedor de fondo donde se va a ir el pokemon -->
+            <div id="contenedorPokemon" style="display: none;" class="show-box__box-bg">
+
+                <!-- Contenedor donde se va a mostrar el pokemon -->
+                <div id="resultado" class="show-pokemon">
+
+                    <h3 class="search-box__title show-box__title">RESULTADO DE BUSQUEDA</h3>
+
+                    <div class="show-box__card">
+                        <div id="imagen" class="show-box__pokemon-img"></div>                        
+                        
+                        <div id="nombre" class="show-box__pokemon-name" ></div>
+
+                    </div>
+
+                    
+                </div>
+            </div>
+
+        </div>
+
+        <section class="favorites-box">
+            <h4 class="search-box__title">MIS POKEMONES FAVORITOS</h4>
+
+            <div class="favorites-cards">
+
+                <!-- Tarjeta pokemon favorito -->
+                <div class="favorites-card-box">
+                    <p class="favorites__title">BULBASAUR</p>
+
+                    <div class="favorites__img">🃏</div>
+
+                    <button class="search-box__button-search favorites__button-delete">Eliminar</button>
+                </div>
+
+                <div class="favorites-card-box">
+                    <p class="favorites__title">BULBASAUR</p>
+
+                    <div class="favorites__img">🃏</div>
+
+                    <button class="search-box__button-search favorites__button-delete">Eliminar</button>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

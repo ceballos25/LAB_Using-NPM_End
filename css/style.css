@@ -1,0 +1,181 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f4f4f4;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+
+/* ------ ENCABEZADO ------- */
+.header {
+    text-align: center;
+    padding: 30px;
+    background-color: #d7ffff;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 0 15px 0 #000000;
+    border-bottom: 5px dashed #000000;
+}
+
+.header__title {
+    color: #2b2b2b;
+    font-size: 3rem;
+}
+
+.header__description {
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+
+/* ------ CONTENIDO PRINCIPAL ------- */
+
+/* --- SECCION BUSCAR POKEMON --- */
+.poke-app {
+    display: flex;
+    padding: 50px;
+    gap: 20px;
+}
+
+.search-box {
+    width: 60%;
+}
+
+.search-box__title {
+    font-size: 1.7rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 3px #b9b9b9;
+}
+
+.search-box__input {
+    width: 50%;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 1.4rem;
+    border-radius: 5px;
+    padding: 8px 25px;
+    font-weight: bold;
+    margin-right: 15px;
+    box-shadow: 3px 2px 10px 0 #989898;
+    border: 4px solid #1d1d1d;
+}
+
+.search-box__button-search {
+    background-color: #208cff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #ededed;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 2px 0 5px 0 #8a8a8a;
+    transition: transform 0.5s;
+}
+
+.search-box__button-search:hover {
+    background-color: #ffffff;
+    outline: 3px solid #208cff;
+    color: #208cff;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.search-box__button-keep {
+    background-color: #0d9800;
+    margin-left: 10px;
+}
+
+.search-box__button-keep:hover {
+    outline: 3px solid #0d9800;
+    color: #0d9800;
+} 
+
+/* --- SECCION MOSTRAR POKEMON --- */
+.show-box__box-bg {
+    width: 100%;
+    background-color: #c2c2c2;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 50px;
+}
+
+.show-pokemon {
+    width: 50%;
+    margin: auto;
+    background-color: #bdf2ff;
+    text-align: center;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.show-box__title {
+    font-size: 1.5rem;
+
+}
+
+.show-box__card {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.show-box__pokemon-img {
+    font-size: 5rem;
+}
+
+.show-box__pokemon-name {
+    width: 50%;
+    background-color: #a8eeff;
+    border: 2px solid #208cff;
+    margin: auto;
+    padding: 10px 20px;
+    border-radius: 15px;
+}
+
+
+/* --- SECCION POKEMONES FAVORITOS --- */
+.favorites-box {
+    width: 40%;
+}
+/* --- SECCION POKEMONES FAVORITOS --- */
+.favorites-box {
+    width: 40%;
+}
+
+.favorites-cards {
+    display: flex;
+    gap: 30px;
+}
+
+
+/* --- SECCION TARJETA POKEMON FAVORITO --- */
+.favorites-card-box {
+    flex-basis: 200px;
+    text-align: center;
+    border: 4px solid #252525;
+    border-radius: 15px;
+    box-shadow: var(--box-shadow);
+}
+
+.favorites__title {
+    background-color: #a8eeff;
+    padding: 15px;
+    font-weight: bold;
+    border-radius: 15px 15px 0 0;
+    border-bottom: 3px dashed #000000;;
+    
+}
+
+.favorites__img {
+    font-size: 5rem;
+}
+
+.favorites__button-delete {
+    margin-top: 20px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    background-color: #ff4040;
+}
